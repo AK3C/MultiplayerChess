@@ -22,6 +22,13 @@ app.post('/api/action', (req, res) => {
     });
 });
 
+// Route pour récupérer la liste des joueurs
+app.get('/api/users', (req, res) => {
+  // Tu lis ton fichier users.json et tu l'renvoies
+  const users = JSON.parse(fs.readFileSync('./server/data/users.json', 'utf-8'));
+  res.json(users);
+});
+
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);
 });
