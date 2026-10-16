@@ -1,1 +1,1 @@
-# MultiplayerChess
+The best Chest game ever created by the human species.
