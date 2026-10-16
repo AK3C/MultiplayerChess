@@ -1,0 +1,23 @@
+{
+  "name": "multiplayerchess",
+  "version": "1.0.0",
+  "description": "The best Chest game ever created by the human species.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AK3C/MultiplayerChess.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AK3C/MultiplayerChess/issues"
+  },
+  "homepage": "https://github.com/AK3C/MultiplayerChess#readme",
+  "dependencies": {
+    "express": "^5.3.0"
+  }
+}

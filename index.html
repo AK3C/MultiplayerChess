@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Client-Serveur</title>
+</head>
+<body>
+    <h1>Mon Jeu Multijoueur</h1>
+    <button id="btn-get">Récupérer l'état</button>
+    <button id="btn-post">Envoyer une action</button>
+    <p id="resultat"></p>
+
+    <script>
+        document.getElementById('btn-get').addEventListener('click', async () => {
+            try {
+                const reponse = await fetch('http://localhost:3000/api/etat');
+                const data = await reponse.json();
+                document.getElementById('resultat').textContent = JSON.stringify(data);
+            } catch (erreur) {
+                console.error("Erreur de connexion :", erreur);
+            }
+        });
+
+        document.getElementById('btn-post').addEventListener('click', async () => {
+            try {
+                const action = { type: 'DEPLACER', x: 10, y: 5 };
+                
+                const reponse = await fetch('http://localhost:3000/api/action', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(action)
+                });
+                
+                const data = await reponse.json();
+                document.getElementById('resultat').textContent = JSON.stringify(data);
+            } catch (erreur) {
+                console.error("Erreur d'envoi :", erreur);
+            }
+        });
+    </script>
+</body>
+</html>
