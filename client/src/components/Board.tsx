@@ -1,19 +1,18 @@
-import React from 'react';
-
 interface BoardProps {
   fen: string;
+  isMobile?: boolean;
 }
 
 const pieceDimensions: Record<string, { width: string; height: string }> = {
-  P: { width: '17px', height: '28px' },
-  R: { width: '21px', height: '36px' },
-  N: { width: '23px', height: '41px' },
-  B: { width: '21px', height: '47px' },
-  Q: { width: '25px', height: '69px' },
-  K: { width: '25px', height: '63px' },
+  P: { width: '80%', height: '80%' },
+  R: { width: '80%', height: '80%' },
+  N: { width: '80%', height: '80%' },
+  B: { width: '80%', height: '80%' },
+  Q: { width: '80%', height: '80%' },
+  K: { width: '80%', height: '80%' },
 };
 
-export default function Board({ fen }: BoardProps) {
+export default function Board({ fen, isMobile = false }: BoardProps) {
   const boardMatrix = fenToBoard(fen);
   const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
   const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
@@ -24,8 +23,9 @@ export default function Board({ fen }: BoardProps) {
         className="relative shadow-2xl rounded-md overflow-hidden select-none border border-neutral-800"
         style={{ 
           backgroundColor: '#262421',
-          width: 'min(90vw, 480px)',
-          height: 'min(90vw, 480px)',
+          // Grand format confortable sur PC, taille adaptée sur mobile
+          width: isMobile ? 'min(85vw, 380px)' : 'min(85vh, 720px)',
+          height: isMobile ? 'min(85vw, 380px)' : 'min(85vh, 720px)',
         }}
       >
         <div 
@@ -64,7 +64,7 @@ export default function Board({ fen }: BoardProps) {
                         position: 'absolute',
                         top: '2px',
                         left: '4px',
-                        fontSize: '10px',
+                        fontSize: isMobile ? '9px' : '11px',
                         fontWeight: 'bold',
                         color: isDark ? '#f0d9b5' : '#b58863',
                         pointerEvents: 'none',
@@ -81,7 +81,7 @@ export default function Board({ fen }: BoardProps) {
                         position: 'absolute',
                         bottom: '2px',
                         right: '4px',
-                        fontSize: '10px',
+                        fontSize: isMobile ? '9px' : '11px',
                         fontWeight: 'bold',
                         color: isDark ? '#f0d9b5' : '#b58863',
                         pointerEvents: 'none',
@@ -100,8 +100,6 @@ export default function Board({ fen }: BoardProps) {
                       style={{
                         width: dim.width,
                         height: dim.height,
-                        maxWidth: '85%',
-                        maxHeight: '85%',
                         objectFit: 'contain',
                         pointerEvents: 'none',
                         zIndex: 10,
