@@ -1,6 +1,11 @@
+// client/src/components/Board.tsx
+import React from 'react';
+
 interface BoardProps {
   fen: string;
   isMobile?: boolean;
+  darkSquareColor?: string;
+  lightSquareColor?: string;
 }
 
 const pieceDimensions: Record<string, { width: string; height: string }> = {
@@ -12,10 +17,15 @@ const pieceDimensions: Record<string, { width: string; height: string }> = {
   K: { width: '80%', height: '80%' },
 };
 
-export default function Board({ fen, isMobile = false }: BoardProps) {
+const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
+export default function Board({ 
+  fen, 
+  isMobile = false,
+  darkSquareColor = '#b58863',
+  lightSquareColor = '#f0d9b5' 
+}: BoardProps) {
   const boardMatrix = fenToBoard(fen);
-  const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
-  const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
@@ -40,7 +50,7 @@ export default function Board({ fen, isMobile = false }: BoardProps) {
           {boardMatrix.map((row, rowIndex) =>
             row.map((piece, colIndex) => {
               const isDark = (rowIndex + colIndex) % 2 !== 0;
-              const backgroundColor = isDark ? '#b58863' : '#f0d9b5';
+              let backgroundColor = isDark ? darkSquareColor : lightSquareColor;
 
               const pieceType = piece ? piece.charAt(1) : null;
               const dim = pieceType ? pieceDimensions[pieceType] : null;
@@ -66,7 +76,7 @@ export default function Board({ fen, isMobile = false }: BoardProps) {
                         left: '4px',
                         fontSize: isMobile ? '9px' : '11px',
                         fontWeight: 'bold',
-                        color: isDark ? '#f0d9b5' : '#b58863',
+                        color: isDark ? lightSquareColor : darkSquareColor,
                         pointerEvents: 'none',
                         lineHeight: 1,
                       }}
@@ -83,7 +93,7 @@ export default function Board({ fen, isMobile = false }: BoardProps) {
                         right: '4px',
                         fontSize: isMobile ? '9px' : '11px',
                         fontWeight: 'bold',
-                        color: isDark ? '#f0d9b5' : '#b58863',
+                        color: isDark ? lightSquareColor : darkSquareColor,
                         pointerEvents: 'none',
                         lineHeight: 1,
                       }}
