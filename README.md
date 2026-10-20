@@ -37,15 +37,16 @@ multiplayer-chess/
     ├── vite.config.js    
     ├── index.html        # Page HTML principale
     └── src/
-        ├── App.jsx       # Routeur principal 
-        ├── main.jsx      # Point d'entrée React
+        ├── App.tsx       # Routeur principal 
+        ├── Game.tsx 
+        ├── main.tsx      # Point d'entrée React
+        ├── socket.ts
         ├── components/
-        │   ├── Navbar.jsx    
-        │   ├── ProfileSelect.jsx 
-        │   ├── Lobby.jsx     
-        │   ├── Board.jsx     
-        │   ├── Chat.jsx      
-        │   └── Stats.jsx     
+        │   ├── DrawButton.tsx    
+        │   ├── ResignButton.tsx 
+        │   ├── ThemeButton.tsx     
+        │   ├── Timer.tsx
+        │   ├── Board.tsx     
         └── styles/
             └── index.css # Configuration Tailwind CSS
 
