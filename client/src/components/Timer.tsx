@@ -10,22 +10,22 @@ interface TimerProps {
 export default function Timer({ initialTime, isActive, onTimeOut, playerName }: TimerProps) {
   const [timeLeft, setTimeLeft] = useState(initialTime);
 
-//   useEffect(() => {
-//     if (!isActive || timeLeft <= 0) return;
+  useEffect(() => {
+    if (!isActive || timeLeft <= 0) return;
 
-//     const interval = setInterval(() => {
-//       setTimeLeft((prev) => {
-//         if (prev <= 1) {
-//           clearInterval(interval);
-//           onTimeOut();
-//           return 0;
-//         }
-//         return prev - 1;
-//       });
-//     }, 1000);
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          onTimeOut();
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
 
-//     return () => clearInterval(interval);
-//   }, [isActive, timeLeft, onTimeOut]);
+    return () => clearInterval(interval);
+  }, [isActive, timeLeft, onTimeOut]);
 
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
