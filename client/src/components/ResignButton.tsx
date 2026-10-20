@@ -46,10 +46,12 @@ export default function ResignButton({ onResign }: ResignButtonProps) {
       onMouseUp={(e) => {
         e.currentTarget.style.transform = 'translateY(0px)';
         e.currentTarget.style.boxShadow = confirming ? '0 4px 0 #7a0000' : '0 4px 0 #262421';
+        e.currentTarget.style.borderBottom = confirming ? '2px solid #7a0000' : '2px solid #262421';
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = 'translateY(0px)';
         e.currentTarget.style.boxShadow = confirming ? '0 4px 0 #7a0000' : '0 4px 0 #262421';
+        e.currentTarget.style.borderBottom = confirming ? '2px solid #7a0000' : '2px solid #262421';
       }}
     >
       <Flag size={18} />

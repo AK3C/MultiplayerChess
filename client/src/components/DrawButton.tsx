@@ -34,10 +34,12 @@ export default function DrawButton({ onDrawClick }: DrawButtonProps) {
       onMouseUp={(e) => {
         e.currentTarget.style.transform = 'translateY(0px)';
         e.currentTarget.style.boxShadow = '0 4px 0 #262421';
+        e.currentTarget.style.borderBottom = '2px solid #262421';
       }}
       onMouseLeave={(e) => {
         e.currentTarget.style.transform = 'translateY(0px)';
         e.currentTarget.style.boxShadow = '0 4px 0 #262421';
+        e.currentTarget.style.borderBottom = '2px solid #262421';
       }}
     >
       <span style={{ fontSize: '16px' }}>½</span>
