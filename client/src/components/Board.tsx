@@ -3,6 +3,9 @@ import React from 'react';
 
 interface BoardProps {
   fen: string;
+  onSquareClick?: (square: string) => void;
+  selectedSquare?: string | null;
+  possibleMoves?: string[]; 
   isMobile?: boolean;
   darkSquareColor?: string;
   lightSquareColor?: string;
@@ -19,8 +22,12 @@ const pieceDimensions: Record<string, { width: string; height: string }> = {
 
 const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
 const ranks = ['8', '7', '6', '5', '4', '3', '2', '1'];
+
 export default function Board({ 
   fen, 
+  onSquareClick,
+  selectedSquare,
+  possibleMoves = [],
   isMobile = false,
   darkSquareColor = '#b58863',
   lightSquareColor = '#f0d9b5' 
@@ -33,7 +40,6 @@ export default function Board({
         className="relative shadow-2xl rounded-md overflow-hidden select-none border border-neutral-800"
         style={{ 
           backgroundColor: '#262421',
-          // Grand format confortable sur PC, taille adaptée sur mobile
           width: isMobile ? 'min(85vw, 380px)' : 'min(85vh, 720px)',
           height: isMobile ? 'min(85vw, 380px)' : 'min(85vh, 720px)',
         }}
@@ -49,15 +55,25 @@ export default function Board({
         >
           {boardMatrix.map((row, rowIndex) =>
             row.map((piece, colIndex) => {
+              const currentSquare = `${files[colIndex]}${ranks[rowIndex]}`;
               const isDark = (rowIndex + colIndex) % 2 !== 0;
               let backgroundColor = isDark ? darkSquareColor : lightSquareColor;
+
+              const isSelected = selectedSquare === currentSquare;
+              const isPossibleMove = possibleMoves.includes(currentSquare);
+
+              // Surlignage de la case sélectionnée
+              if (isSelected) {
+                backgroundColor = isDark ? '#baca44' : '#f7f769';
+              }
 
               const pieceType = piece ? piece.charAt(1) : null;
               const dim = pieceType ? pieceDimensions[pieceType] : null;
 
               return (
                 <div
-                  key={`${rowIndex}-${colIndex}`}
+                  key={currentSquare}
+                  onClick={() => onSquareClick && onSquareClick(currentSquare)}
                   style={{
                     backgroundColor: backgroundColor,
                     display: 'flex',
@@ -66,8 +82,10 @@ export default function Board({
                     position: 'relative',
                     width: '100%',
                     height: '100%',
+                    cursor: 'pointer',
                   }}
                 >
+                  {/* Coordonnées */}
                   {colIndex === 0 && (
                     <span 
                       style={{
@@ -102,7 +120,22 @@ export default function Board({
                     </span>
                   )}
 
-                  {/* La pièce */}
+                  {isPossibleMove && (
+                    <div 
+                      style={{
+                        position: 'absolute',
+                        width: piece ? '85%' : '32%',
+                        height: piece ? '85%' : '32%',
+                        borderRadius: piece ? '50%' : '50%',
+                        backgroundColor: piece ? 'transparent' : 'rgba(0, 0, 0, 0.2)',
+                        border: piece ? '4px solid rgba(0, 0, 0, 0.2)' : 'none',
+                        zIndex: 15,
+                        pointerEvents: 'none',
+                      }}
+                    />
+                  )}
+
+                  {/* Image de la pièce */}
                   {piece && dim && (
                     <img
                       src={`/images/${piece}.png`}
@@ -126,7 +159,7 @@ export default function Board({
   );
 }
 
-// --- Fonctions utilitaires FEN ---
+// --- Fonctions utilitaires ---
 function fenToBoard(fen: string): (string | null)[][] {
   const rows = fen.split(' ')[0].split('/');
   const resultBoard: (string | null)[][] = [];
