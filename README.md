@@ -1,4 +1,4 @@
-Online Chess game by the homies for the homies
+Online Chess game by the homies for the homies !
 
 # ♟️ Multiplayer Chess (Self-Hosted)
 
