@@ -20,9 +20,15 @@ const THEMES = [
 
 interface GameProps {
   onBackToLobby?: () => void;
+  settings?: {
+    timerEnabled: boolean;
+    timeControl: number;
+    color: 'white' | 'random' | 'black';
+    isCompetitive: boolean;
+  };
 }
 
-export default function Game({ onBackToLobby }: GameProps) {
+export default function Game({ onBackToLobby, settings }: GameProps) {
   const [fen, setFen] = useState('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
   const [isWhiteTurn, setIsWhiteTurn] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
@@ -32,6 +38,9 @@ export default function Game({ onBackToLobby }: GameProps) {
   const localGame = new Chess(fen);
   const currentTheme = THEMES[themeIndex];
 
+  const initialTimeSeconds = settings?.timerEnabled 
+    ? settings.timeControl * 60 
+    : 600;
   // Écoute des mises à jour du serveur WebSocket
   useEffect(() => {
     socket.on('gameStateUpdate', (data: { fen: string; turn: string; isGameOver: boolean }) => {
@@ -137,7 +146,7 @@ export default function Game({ onBackToLobby }: GameProps) {
             <div style={{ width: '130px' }}>
               <Timer 
                 playerName="Adversaire" 
-                initialTime={60} 
+                initialTime={initialTimeSeconds} 
                 isActive={!isWhiteTurn} 
                 onTimeOut={() => alert('Temps écoulé ! Victoire des Blancs.')} 
               />
@@ -165,7 +174,7 @@ export default function Game({ onBackToLobby }: GameProps) {
             <div style={{ width: '130px' }}>
               <Timer 
                 playerName="Moi" 
-                initialTime={60} 
+                initialTime={initialTimeSeconds} 
                 isActive={isWhiteTurn} 
                 onTimeOut={() => alert('Temps écoulé ! Victoire des Noirs.')} 
               />
@@ -224,13 +233,13 @@ export default function Game({ onBackToLobby }: GameProps) {
         }}>
           <Timer 
             playerName="Adversaire" 
-            initialTime={1200} 
+            initialTime={initialTimeSeconds} 
             isActive={!isWhiteTurn} 
             onTimeOut={() => alert('Temps écoulé ! Victoire des Blancs.')} 
           />
           <Timer 
             playerName="Moi" 
-            initialTime={1200} 
+            initialTime={initialTimeSeconds} 
             isActive={isWhiteTurn} 
             onTimeOut={() => alert('Temps écoulé ! Victoire des Noirs.')} 
           />
