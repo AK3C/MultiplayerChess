@@ -32,16 +32,14 @@ export default function Launcher({ onStartGame }: LauncherProps) {
     <div style={{
       minHeight: 'auto',
       width: 'auto',
-      backgroundColor: '#363431',
       color: '#ffffff',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'flex-start',
-      padding: '24px 16px',
+      padding: '0',
       boxSizing: 'border-box',
       overflowY: 'auto',
-      fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
     }}>
       <div style={{
         width: '100%',
