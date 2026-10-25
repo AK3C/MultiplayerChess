@@ -2,11 +2,21 @@ import { useState } from 'react';
 import Game from './Game';
 
 export default function App() {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [screen, setScreen] = useState<'lobby' | 'select' | 'game'>('lobby');
+  const [player, setPlayer] = useState<PlayerColor | null>(null);
+  
 
   // Si le joueur lance la partie, on affiche l'interface de jeu
-  if (isPlaying) {
-    return <Game onBackToLobby={() => setIsPlaying(false)} />;
+  if (screen == 'game') {
+    return <Game onBackToLobby={() => setScreen('lobby')} />;
+  }
+  if (screen === 'select') {
+    return (
+      <PlayerSelect
+        onSelect={(p) => { setPlayer(p); setScreen('game'); }}
+        onBack={() => setScreen('lobby')}
+      />
+    );
   }
 
   // Écran du Lobby / Lanceur de partie
@@ -49,7 +59,7 @@ export default function App() {
 
         {/* Bouton de lancement de partie*/}
         <button
-          onClick={() => setIsPlaying(true)}
+          onClick={() => setScreen('select')}
           style={{
             width: '100%',
             backgroundColor: '#854AD9',
