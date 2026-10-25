@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import Game from './Game';
+import PlayerSelect, { type PlayerColor } from './PlayerSelect';
 
 export default function App() {
   const [screen, setScreen] = useState<'lobby' | 'select' | 'game'>('lobby');
