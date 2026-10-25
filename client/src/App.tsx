@@ -1,100 +1,113 @@
 import { useState } from 'react';
+import Launcher from './components/Launcher';
 import Game from './Game';
-import PlayerSelect, { type PlayerColor } from './PlayerSelect';
+import PlayerSelect, { type PlayerColor } from './components/PlayerSelect';
+import Sidebar from './layouts/Sidebar';
+import Lobby from './layouts/Lobby';
+import Infos from './layouts/Infos';
+
+const PLAYERS: Record<PlayerColor, { label: string; color: string; shadow: string }> = {
+  red: { label: 'Nath', color: '#D94A4A', shadow: '#b83a3a' },
+  blue: { label: 'Max', color: '#4A7DD9', shadow: '#3a64b3' },
+  yellow: { label: 'Tristan', color: '#D9B84A', shadow: '#b39a3a' },
+  green: { label: 'Antoine', color: '#4AD97A', shadow: '#3ab363' },
+};
 
 export default function App() {
-  const [screen, setScreen] = useState<'lobby' | 'select' | 'game'>('lobby');
   const [player, setPlayer] = useState<PlayerColor | null>(null);
-  
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [gameSettings, setGameSettings] = useState<any>(null);
+  const [activeNav, setActiveNav] = useState('play');
+  const [showLauncher, setShowLauncher] = useState(false);
+  const [showPlayerSelectModal, setShowPlayerSelectModal] = useState(false);
 
-  // Si le joueur lance la partie, on affiche l'interface de jeu
-  if (screen == 'game') {
-    return <Game onBackToLobby={() => setScreen('lobby')} />;
-  }
-  if (screen === 'select') {
+  const handleStartGame = (settings: any) => {
+    setGameSettings(settings);
+    setIsPlaying(true);
+  };
+
+  const handleQuickPlay = (time: number) => {
+    handleStartGame({
+      timerEnabled: true,
+      timeControl: time,
+      color: 'random' as const,
+      isCompetitive: false,
+    });
+  };
+
+  if (isPlaying) {
     return (
-      <PlayerSelect
-        onSelect={(p) => { setPlayer(p); setScreen('game'); }}
-        onBack={() => setScreen('lobby')}
+      <Game 
+        onBackToLobby={() => {
+          setIsPlaying(false);
+          setGameSettings(null);
+          setShowLauncher(false);
+        }} 
+        settings={gameSettings} 
       />
     );
   }
 
-  // Écran du Lobby / Lanceur de partie
+  if (!player) {
+    return (
+      <div style={{ minHeight: '100vh', width: '100vw', backgroundColor: '#272522', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', boxSizing: 'border-box' }}>
+        <PlayerSelect onSelect={(selectedPlayer) => setPlayer(selectedPlayer)} />
+      </div>
+    );
+  }
+
+  const currentPlayer = PLAYERS[player];
+
   return (
-    <div style={{
-      minHeight: '100vh',
-      width: '100vw',
-      backgroundColor: '#272522',
-      color: '#ffffff',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      margin: 0,
-      padding: '20px',
-      boxSizing: 'border-box'
-    }}>
+    <div style={{ minHeight: '100vh', width: '100vw', backgroundColor: '#272522', display: 'flex', fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif', overflow: 'hidden' }}>
       
-      {/* Conteneur principal du Lobby */}
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '24px',
-        width: '100%',
-        maxWidth: '440px',
-        backgroundColor: '#363431',
-        padding: '36px 28px',
-        borderRadius: '16px',
-        boxShadow: '0 25px 50px rgba(0, 0, 0, 0.6)',
-        border: '1px solid #484541'
-      }}>
-        
-        {/* Titre / Logo */}
-        <div style={{ textAlign: 'center' }}>
-          <h1 style={{ fontSize: '26px', fontWeight: 'bold', color: '#ffffff', margin: 0 }}>
-            Chess
-          </h1>
+      {/* Modal Changement de profil */}
+      {showPlayerSelectModal && (
+        <PlayerSelect
+          onSelect={(selectedPlayer) => {
+            setPlayer(selectedPlayer);
+            setShowPlayerSelectModal(false);
+          }}
+          onBack={() => setShowPlayerSelectModal(false)}
+        />
+      )}
+
+      {/* Modal Launcher */}
+      {showLauncher && (
+        <div style={{ minHeight: '100vh', width: '100vw', backgroundColor: 'rgba(0, 0, 0, 0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'fixed', top: 0, left: 0, zIndex: 100 }}>
+          <div style={{ backgroundColor: '#302e2b', borderRadius: '16px', padding: '32px', width: '100%', maxWidth: '500px', border: '1px solid #484541', boxShadow: '0 25px 60px rgba(0, 0, 0, 0.6)', position: 'relative' }}>
+            <button onClick={() => setShowLauncher(false)} style={{ position: 'absolute', top: '16px', right: '16px', background: 'none', border: 'none', color: '#a5a29e', fontSize: '24px', cursor: 'pointer' }}>✕</button>
+            <h2 style={{ color: '#ffffff', fontSize: '20px', fontWeight: 700, marginBottom: '20px', marginTop: 0 }}>Partie personnalisée</h2>
+            <Launcher onStartGame={handleStartGame} />
+          </div>
         </div>
+      )}
 
-        {/* Bouton de lancement de partie*/}
-        <button
-          onClick={() => setScreen('select')}
-          style={{
-            width: '100%',
-            backgroundColor: '#854AD9',
-            color: '#ffffff',
-            border: 'none',
-            borderRadius: '10px',
-            padding: '16px',
-            fontSize: '16px',
-            fontWeight: 'bold',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '10px',
-            cursor: 'pointer',
-            boxShadow: '0 5px 0 #703abb',
-            transition: 'all 0.1s ease',
-            userSelect: 'none',
-          }}
-          onMouseDown={(e) => {
-            e.currentTarget.style.transform = 'translateY(3px)';
-            e.currentTarget.style.boxShadow = '0 2px 0 #703abb';
-          }}
-          onMouseUp={(e) => {
-            e.currentTarget.style.transform = 'translateY(0px)';
-            e.currentTarget.style.boxShadow = '0 5px 0 #703abb';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0px)';
-            e.currentTarget.style.boxShadow = '0 5px 0 #703abb';
-          }}
-        >
-          <span>Play</span>
-        </button>
+      {/* Barre latérale */}
+      <Sidebar
+        activeNav={activeNav}
+        setActiveNav={setActiveNav}
+        currentPlayer={currentPlayer}
+        onOpenProfileSelect={() => setShowPlayerSelectModal(true)}
+      />
 
+      {/* Contenu principal */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'auto' }}>
+        <div style={{ flex: 1, display: 'flex', gap: '24px', marginTop: '50px', padding: '28px 32px', alignItems: 'flex-start' }}>
+          
+          <Lobby
+            onQuickPlay={handleQuickPlay}
+            onOpenLauncher={() => setShowLauncher(true)}
+          />
+
+          <Infos
+            player={player}
+            currentPlayer={currentPlayer}
+            playersConfig={PLAYERS}
+            onOpenProfileSelect={() => setShowPlayerSelectModal(true)}
+          />
+
+        </div>
       </div>
     </div>
   );
