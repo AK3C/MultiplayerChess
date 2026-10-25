@@ -1,101 +1,87 @@
 import { useState } from 'react';
+import Launcher from './components/Launcher';
 import Game from './Game';
-import PlayerSelect, { type PlayerColor } from './PlayerSelect';
 
 export default function App() {
-  const [screen, setScreen] = useState<'lobby' | 'select' | 'game'>('lobby');
-  const [player, setPlayer] = useState<PlayerColor | null>(null);
-  
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [gameSettings, setGameSettings] = useState<any>(null);
 
-  // Si le joueur lance la partie, on affiche l'interface de jeu
-  if (screen == 'game') {
-    return <Game onBackToLobby={() => setScreen('lobby')} />;
-  }
-  if (screen === 'select') {
+  // Fonction appelée lorsque l'utilisateur valide ses paramètres de jeu dans le Launcher
+  const handleStartGame = (settings: any) => {
+    setGameSettings(settings);
+    setIsPlaying(true);
+    // Plus tard, c'est ici qu'on enverra les paramètres au serveur :
+    // socket.emit('join_match', settings);
+  };
+
+  // Si le joueur est en partie, on affiche l'échiquier (Game)
+  if (isPlaying) {
     return (
-      <PlayerSelect
-        onSelect={(p) => { setPlayer(p); setScreen('game'); }}
-        onBack={() => setScreen('lobby')}
+      <Game 
+        onBackToLobby={() => {
+          setIsPlaying(false);
+          setGameSettings(null);
+        }} 
+        settings={gameSettings} 
       />
     );
   }
 
-  // Écran du Lobby / Lanceur de partie
+  // Sinon, on affiche le dashboard à 3 sections de taille égale
   return (
     <div style={{
-      minHeight: '100vh',
-      width: '100vw',
-      backgroundColor: '#272522',
-      color: '#ffffff',
       display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      margin: 0,
+      gap: '20px',
+      width: '100%',
+      maxWidth: '1200px',
+      margin: '0 auto',
       padding: '20px',
       boxSizing: 'border-box'
     }}>
-      
-      {/* Conteneur principal du Lobby */}
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        gap: '24px',
-        width: '100%',
-        maxWidth: '440px',
+      {/* Section 1 : Statistiques */}
+      <section style={{
+        flex: 1,
         backgroundColor: '#363431',
-        padding: '36px 28px',
-        borderRadius: '16px',
-        boxShadow: '0 25px 50px rgba(0, 0, 0, 0.6)',
-        border: '1px solid #484541'
+        borderRadius: '12px',
+        border: '2px solid #262421',
+        boxShadow: '0 4px 0 #262421',
+        padding: '20px',
+        display: 'flex',
+        flexDirection: 'column'
       }}>
-        
-        {/* Titre / Logo */}
-        <div style={{ textAlign: 'center' }}>
-          <h1 style={{ fontSize: '26px', fontWeight: 'bold', color: '#ffffff', margin: 0 }}>
-            Chess
-          </h1>
-        </div>
+        <h2 style={{ color: '#ffffff', fontSize: '18px', marginBottom: '12px' }}>Statistiques</h2>
+        {/* Contenu stats */}
+      </section>
 
-        {/* Bouton de lancement de partie*/}
-        <button
-          onClick={() => setScreen('select')}
-          style={{
-            width: '100%',
-            backgroundColor: '#854AD9',
-            color: '#ffffff',
-            border: 'none',
-            borderRadius: '10px',
-            padding: '16px',
-            fontSize: '16px',
-            fontWeight: 'bold',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '10px',
-            cursor: 'pointer',
-            boxShadow: '0 5px 0 #703abb',
-            transition: 'all 0.1s ease',
-            userSelect: 'none',
-          }}
-          onMouseDown={(e) => {
-            e.currentTarget.style.transform = 'translateY(3px)';
-            e.currentTarget.style.boxShadow = '0 2px 0 #703abb';
-          }}
-          onMouseUp={(e) => {
-            e.currentTarget.style.transform = 'translateY(0px)';
-            e.currentTarget.style.boxShadow = '0 5px 0 #703abb';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0px)';
-            e.currentTarget.style.boxShadow = '0 5px 0 #703abb';
-          }}
-        >
-          <span>Play</span>
-        </button>
+      {/* Section 2 : See game right now (Parties en cours) */}
+      <section style={{
+        flex: 1,
+        backgroundColor: '#363431',
+        borderRadius: '12px',
+        border: '2px solid #262421',
+        boxShadow: '0 4px 0 #262421',
+        padding: '20px',
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
+        <h2 style={{ color: '#ffffff', fontSize: '18px', marginBottom: '12px' }}>Parties en cours</h2>
+        {/* Contenu see game */}
+      </section>
 
-      </div>
+      {/* Section 3 : Launch a game */}
+      <section style={{
+        flex: 1,
+        backgroundColor: '#363431',
+        borderRadius: '12px',
+        border: '2px solid #262421',
+        boxShadow: '0 4px 0 #262421',
+        padding: '20px',
+        display: 'flex',
+        flexDirection: 'column'
+      }}>
+        <h2 style={{ color: '#ffffff', fontSize: '18px', marginBottom: '12px' }}>Lancer une partie</h2>
+        <Launcher onStartGame={handleStartGame} />
+      </section>
     </div>
   );
 }
