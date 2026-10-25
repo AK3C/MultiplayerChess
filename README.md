@@ -49,21 +49,20 @@ multiplayer-chess/
         │   ├── Board.tsx     
         └── styles/
             └── index.css # Configuration Tailwind CSS
-
+```
 
 ## Configurer le serveur
-
-Initialisation
+**Initialisation**
 ```
 cd server
 npm install
 ```
 
-Création des profils dans `server/data/users.json`. 
+*Création des profils dans* `server/data/users.json`. 
 
 
 ## Configurer le client
-
+**Initialisation**
 ```
 cd client
 npm install
