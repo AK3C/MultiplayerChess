@@ -1,10 +1,10 @@
 // client/src/Game.tsx
 import { useState, useEffect } from 'react';
-import Board from './components/Board';
-import Timer from './components/Timer';
-import DrawButton from './components/DrawButton';
-import ResignButton from './components/ResignButton';
-import ThemeButton from './components/ThemeButton';
+import Board from './components/Game/Board';
+import Timer from './components/Game/Timer';
+import DrawButton from './components/Game/DrawButton';
+import ResignButton from './components/Game/ResignButton';
+import ThemeButton from './components/Game/ThemeButton';
 import { socket } from './socket';
 import { Chess } from 'chess.js';
 
