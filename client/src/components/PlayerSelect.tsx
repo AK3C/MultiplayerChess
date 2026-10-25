@@ -8,13 +8,13 @@ interface PlayerSelectProps {
 }
 
 const PLAYERS: { id: PlayerColor; label: string; color: string; shadow: string }[] = [
-  { id: 'red', label: 'Player 1 · Nath', color: '#D94A4A', shadow: '#b83a3a' },
-  { id: 'blue', label: 'Player 2 · Max', color: '#4A7DD9', shadow: '#3a64b3' },
-  { id: 'yellow', label: 'Player 3 · Tristan', color: '#D9B84A', shadow: '#b39a3a' },
-  { id: 'green', label: 'Player 4 · Antoine', color: '#4AD97A', shadow: '#3ab363' },
+  { id: 'red', label: 'Nath', color: '#D94A4A', shadow: '#b83a3a' },
+  { id: 'blue', label: 'Max', color: '#4A7DD9', shadow: '#3a64b3' },
+  { id: 'yellow', label: 'Tristan', color: '#D9B84A', shadow: '#b39a3a' },
+  { id: 'green', label: 'Antoine', color: '#4AD97A', shadow: '#3ab363' },
 ];
 
-export default function PlayerSelect({ onSelect, onBack }: PlayerSelectProps) {
+export default function PlayerSelect({ onSelect }: PlayerSelectProps) {
   const [pressed, setPressed] = useState<PlayerColor | null>(null);
 
   return (
@@ -39,7 +39,7 @@ export default function PlayerSelect({ onSelect, onBack }: PlayerSelectProps) {
         alignItems: 'center',
         gap: '24px',
         width: '100%',
-        maxWidth: '440px',
+        maxWidth: '480px',
         backgroundColor: '#363431',
         padding: '36px 28px',
         borderRadius: '16px',
@@ -47,20 +47,10 @@ export default function PlayerSelect({ onSelect, onBack }: PlayerSelectProps) {
         border: '1px solid #484541'
       }}>
 
-        {/* Title */}
-        <div style={{ textAlign: 'center' }}>
-          <h1 style={{ fontSize: '26px', fontWeight: 'bold', color: '#ffffff', margin: 0 }}>
-            Choose your side
-          </h1>
-          <p style={{ fontSize: '14px', color: '#a5a29e', margin: '8px 0 0 0' }}>
-            Pick who you will play as
-          </p>
-        </div>
-
-        {/* 4 player buttons */}
+        {/* Grille 2x2 des joueurs */}
         <div style={{
-          display: 'flex',
-          flexDirection: 'column',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(2, 1fr)',
           gap: '16px',
           width: '100%'
         }}>
@@ -75,6 +65,7 @@ export default function PlayerSelect({ onSelect, onBack }: PlayerSelectProps) {
                 onMouseLeave={() => setPressed(null)}
                 style={{
                   width: '100%',
+                  height: '64px',
                   backgroundColor: p.color,
                   color: '#ffffff',
                   border: 'none',
@@ -93,35 +84,11 @@ export default function PlayerSelect({ onSelect, onBack }: PlayerSelectProps) {
                   userSelect: 'none',
                 }}
               >
-                <span style={{
-                  width: '14px',
-                  height: '14px',
-                  borderRadius: '50%',
-                  backgroundColor: '#ffffff',
-                  opacity: 0.85
-                }} />
                 <span>{p.label}</span>
               </button>
             );
           })}
         </div>
-
-        {/* Back link */}
-        <button
-          onClick={onBack}
-          style={{
-            background: 'none',
-            border: 'none',
-            color: '#a5a29e',
-            fontSize: '14px',
-            cursor: 'pointer',
-            textDecoration: 'underline',
-            userSelect: 'none',
-          }}
-        >
-          ← Back to lobby
-        </button>
-
       </div>
     </div>
   );
